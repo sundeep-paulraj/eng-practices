@@ -119,8 +119,26 @@ The author of the CL should not include major style changes combined with other
 changes. It makes it hard to see what is being changed in the CL, makes merges
 and rollbacks more complex, and causes other problems. For example, if the
 author wants to reformat the whole file, have them send you just the
-reformatting to as one CL, and then send another CL with their functional
-changes after that.
+reformatting as one CL, and then send another CL with their functional changes
+after that.
+
+## Consistency
+
+What if the existing code is inconsistent with the style guide? Per our
+[code review principles](standard.md#principles), the style guide is the
+absolute authority: if something is required by the style guide, the CL should
+follow the guidelines.
+
+In some cases, the style guide makes recommendations rather than declaring
+requirements. In these cases, it's a judgment call whether the new code should
+be consistent with the recommendations or the surrounding code. Bias towards
+following the style guide unless the local inconsistency would be too confusing.
+
+If no other rule applies, the author should maintain consistency with the
+existing code.
+
+Either way, encourage the author to file a bug and add a TODO for cleaning up
+existing code.
 
 ## Documentation
 
