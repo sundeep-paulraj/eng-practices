@@ -39,7 +39,9 @@ changes. It can be a lot of work to split up a change after you've already
 written it, or require lots of time arguing about why the reviewer should accept
 your large change. It's easier to just write small CLs in the first place.
 
-## What is Small? {#what_is_small}
+## What is Small? {#what-is-small}
+
+<a id="what_is_small"></a> <!-- Keep previous permalink to avoid breaking old links. -->
 
 In general, the right size for a CL is **one self-contained change**. This means
 that:
@@ -72,7 +74,9 @@ seems like an acceptably-sized CL to you might be overwhelming to your reviewer.
 When in doubt, write CLs that are smaller than you think you need to write.
 Reviewers rarely complain about getting CLs that are too small.
 
-## When are Large CLs Okay? {#large_okay}
+## When are Large CLs Okay? {#large-okay}
+
+<a id="large_okay"></a> <!-- Keep previous permalink to avoid breaking old links. -->
 
 There are a few situations in which large changes aren't as bad:
 
@@ -82,6 +86,34 @@ There are a few situations in which large changes aren't as bad:
     that you trust completely, and the reviewer's job is just to verify and say
     that they really do want the change. These CLs can be larger, although some
     of the caveats from above (such as merging and testing) still apply.
+
+## Writing Small CLs Efficiently {#efficiently}
+
+If you write a small CL and then you wait for your reviewer to approve it before
+you write your next CL, then you're going to waste a lot of time. So you want to
+find some way to work that won't block you while you're waiting for review. This
+could involve having multiple projects to work on simultaneously, finding
+reviewers who agree to be immediately available, doing in-person reviews, pair
+programming, or splitting your CLs in a way that allows you to continue working
+immediately.
+
+## Splitting CLs {#splitting}
+
+When starting work that will have multiple CLs with potential dependencies among
+each other, it's often useful to think about how to split and organize those CLs
+at a high level before diving into coding.
+
+Besides making things easier for you as an author to manage and organize your
+CLs, it also makes things easier for your code reviewers, which in turn makes
+your code reviews more efficient.
+
+Here are some strategies for splitting work into different CLs.
+
+### Stacking Multiple Changes on Top of Each Other {#stacking}
+
+One way to split up a CL without blocking yourself is to write one small CL,
+send it off for review, and then immediately start writing another CL *based* on
+the first CL. Most version control systems allow you to do this somehow.
 
 ### Splitting by Files {#splitting-files}
 
@@ -99,6 +131,47 @@ configuration or experiment that uses that code; this is easier to roll back
 too, if necessary, as configuration/experiment files are sometimes pushed to
 production faster than code changes.
 
+### Splitting Horizontally {#splitting-horizontally}
+
+Consider creating shared code or stubs that help isolate changes between layers
+of the tech stack. This not only helps expedite development but also encourages
+abstraction between layers.
+
+For example: You created a calculator app with client, API, service, and data
+model layers. A shared proto signature can abstract the service and data model
+layers from each other. Similarly, an API stub can split the implementation of
+client code from service code and enable them to move forward independently.
+Similar ideas can also be applied to more granular function or class level
+abstractions.
+
+### Splitting Vertically {#splitting-vertically}
+
+Orthogonal to the layered, horizontal approach, you can instead break down your
+code into smaller, full-stack, vertical features. Each of these features can be
+independent parallel implementation tracks. This enables some tracks to move
+forward while other tracks are awaiting review or feedback.
+
+Back to our calculator example from
+[Splitting Horizontally](#splitting-horizontally). You now want to support new
+operators, like multiplication and division. You could split this up by
+implementing multiplication and division as separate verticals or sub-features,
+even though they may have some overlap such as shared button styling or shared
+validation logic.
+
+### Splitting Horizontally & Vertically {#splitting-grid}
+
+To take this a step further, you could combine these approaches and chart out an
+implementation plan like this, where each cell is its own standalone CL.
+Starting from the model (at the bottom) and working up to the client:
+
+| Layer   | Feature: Multiplication   | Feature: Division               |
+| ------- | ------------------------- | ------------------------------- |
+| Client  | Add button                | Add button                      |
+| API     | Add endpoint              | Add endpoint                    |
+| Service | Implement transformations | Share transformation logic with |
+:         :                           : multiplication                  :
+| Model   | Add proto definition      | Add proto definition            |
+
 ## Separate Out Refactorings {#refactoring}
 
 It's usually best to do refactorings in a separate CL from feature changes or
@@ -111,11 +184,15 @@ feature change or bug fix CL, though. It's up to the judgment of developers and
 reviewers to decide when a refactoring is so large that it will make the review
 more difficult if included in your current CL.
 
-## Keep related test code in the same CL {#test_code}
+## Keep related test code in the same CL {#test-code}
 
-CLs should include related test code. Remember that [smallness](#what_is_small)
+<a id="test_code"></a> <!-- Keep previous permalink to avoid breaking old links. -->
+
+CLs should include related test code. Remember that [smallness](#what-is-small)
 here refers the conceptual idea that the CL should be focused and is not a
 simplistic function on line count.
+
+Tests are expected for all Google changes.
 
 A CL that adds or changes logic should be accompanied by new or updated tests
 for the new behavior. Pure refactoring CLs (that aren't intended to change

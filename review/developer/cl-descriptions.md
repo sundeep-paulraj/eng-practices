@@ -2,10 +2,19 @@
 
 
 
-A CL description is a public record of **what** change is being made and **why**
-it was made. It will become a permanent part of our version control history, and
-will possibly be read by hundreds of people other than your reviewers over the
-years.
+A CL description is a public record of change, and it is important that it
+communicates:
+
+1.  **What** change is being made? This should summarize the major changes such
+    that readers have a sense of what is being changed without needing to read
+    the entire CL.
+
+1.  **Why** are these changes being made? What contexts did you have as an
+    author when making this change? Were there decisions you made that aren't
+    reflected in the source code? etc.
+
+The CL description will become a permanent part of our version control history
+and will possibly be read by hundreds of people over the years.
 
 Future developers will search for your CL based on its description. Someone in
 the future might be looking for your change because of a faint memory of its
@@ -13,7 +22,18 @@ relevance but without the specifics handy. If all the important information is
 in the code and not the description, it's going to be a lot harder for them to
 locate your CL.
 
-## First Line {#firstline}
+And then, after they find the CL, will they be able to understand *why* the
+change was made? Reading source code may reveal what the software is doing but
+it may not reveal why it exists, which can make it harder for future developers
+to know whether they can move
+[Chesterton's fence](https://abseil.io/resources/swe-book/html/ch03.html#understand_context).
+
+A well-written CL description will help those future engineers -- sometimes,
+including yourself!
+
+## First Line {#first-line}
+
+<a id="firstline"></a> <!-- Keep previous permalink to avoid breaking old links. -->
 
 *   Short summary of what is being done.
 *   Complete sentence, written as though it was an order.
@@ -39,7 +59,7 @@ though.
 
 ## Body is Informative {#informative}
 
-The [first line](#firstline) should be a short, focused summary, while the rest
+The [first line](#first-line) should be a short, focused summary, while the rest
 of the description should fill in the details and include any supplemental
 information a reader needs to understand the changelist holistically. It might
 include a brief description of the problem that's being solved, and why this is
@@ -73,11 +93,11 @@ enough useful information.
 
 Here are some examples of good descriptions.
 
-### Functionality change
+### Functionality change {#functionality-change}
 
 Example:
 
-> rpc: remove size limit on RPC server message freelist.
+> RPC: Remove size limit on RPC server message freelist.
 >
 > Servers like FizzBuzz have very large messages and would benefit from reuse.
 > Make the freelist larger, and add a goroutine that frees the freelist entries
@@ -88,7 +108,7 @@ The first few words describe what the CL actually does. The rest of the
 description talks about the problem being solved, why this is a good solution,
 and a bit more information about the specific implementation.
 
-### Refactoring
+### Refactoring {#refactoring}
 
 Example:
 
@@ -141,7 +161,7 @@ For example:
 Using tags is optional.
 
 When adding tags, consider whether they should be in the [body](#informative) of
-the CL description or the [first line](#firstline). Limit the usage of tags in
+the CL description or the [first line](#first-line). Limit the usage of tags in
 the first line, as this can obscure the content.
 
 Examples with and without tags:
